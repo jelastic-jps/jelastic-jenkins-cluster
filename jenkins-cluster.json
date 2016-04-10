@@ -1,0 +1,99 @@
+{
+	"jpsType": "install",
+	"jpsVersion": "0.3",
+	"logo": "https://download.jelastic.com/public.php?service=files&t=5a18a0c58c09333ebacf2ed5674a88cc&download",
+	"application": {
+		"name": "Jenkins Cluster",
+		"version": "1.0.0",
+    "env": {
+			"topology": {
+        "nodes": [
+					{
+						"nodeType": "docker",
+						"displayName": "jenkins",
+						"nodeGroup": "jenkins",
+						"cloudlets": 16,
+						"docker": {
+							"image": "andretadeu/jenkins",
+							"registry": {
+								"url": "registry.hub.docker.com"
+							}
+						}
+					},
+					{
+						"nodeType": "docker",
+						"displayName": "slave-01",
+						"nodeGroup": "jenkins-slave",
+						"cloudlets": 16,
+						"docker": {
+							"links": [
+								"jenkins:jenkins"
+							],
+							"image": "andretadeu/jenkins-swarm-slave",
+							"registry": {
+								"url": "registry.hub.docker.com"
+							}
+						}
+					},
+					{
+						"nodeType": "docker",
+						"displayName": "slave-02",
+						"nodeGroup": "jenkins-slave",
+						"cloudlets": 16,
+						"docker": {
+							"links": [
+								"jenkins:jenkins"
+							],
+							"image": "andretadeu/jenkins-swarm-slave",
+							"registry": {
+								"url": "registry.hub.docker.com"
+							}
+						}
+					}
+				]
+      }
+    },
+    "onInstall": {
+      "call": [
+				{
+					"procedure": "script",
+					"params": {
+						"displayName": "jenkins"
+					}
+				},
+				{
+					"procedure": "script",
+					"params": {
+						"displayName": "jenkins"
+					}
+				}
+			]
+    },
+		"procedures": [{
+				"id": "replaceFile",
+				"onCall": [{
+						"executeShellCommands": [{
+								"nodeType": "docker",
+                                "extip": false,
+								"commands": [
+										"wget \"http://owncloud.demo.jelastic.com/public.php?service=files&t=0145724036b8eca918b68860052083f9&download\" -O /etc/init.d/jelinit 2>&1",
+										"chmod a+x /etc/init.d/jelinit"
+								],
+								"user": "root"
+							}
+						]
+					}
+				]
+			}, {
+				"id": "script",
+				"onCall": [{
+						"executeScript": {
+							"type": "javascript",
+							"script": "http://owncloud.demo.jelastic.com/public.php?service=files&t=478044425bddca6cd4a9e8ca484e7341&download"
+						}
+					}
+				]
+			}
+		]
+	}
+}
