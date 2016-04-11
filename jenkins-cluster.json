@@ -14,7 +14,7 @@
 						"nodeGroup": "jenkins",
 						"cloudlets": 16,
 						"docker": {
-							"image": "andretadeu/jenkins",
+							"image": "andretadeu/jenkins-swarm",
 							"registry": {
 								"url": "registry.hub.docker.com"
 							}
